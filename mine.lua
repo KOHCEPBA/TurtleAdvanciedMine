@@ -1,10 +1,11 @@
 -- Static varables --
-
+--Tech varables
 debug = true
 debugLevel = 0
 
 stepDeep = 6
 jumperDeep = 3
+digSleepTime = 0.5
 
 slotsCount = 16
 maxFilledSlots = 13
@@ -13,6 +14,11 @@ torchSlot = 1
 hasTorches = true
 chestSlot = 2
 hasChests = true
+
+blockTable = {}
+
+--------------
+
 slotsInfo = {}
 tech = "tech"
 
@@ -23,6 +29,10 @@ otherDirection = {
 	[left] = right,
 	[right] = left
 }
+
+up = "up"
+forward = "forward"
+down = "down"
 
 turnDirection = {
 	[right] = turtle.turnRight,
@@ -38,20 +48,43 @@ end
 
 -- Invite --
 print("Welcome to Digging programm!")
-sleep(0.5)
 if (debug) then
 	debugPrint(0, "debug enabled")
 end
 
 -- Program body --
-function digForward()
-	if (debug) then
-		debugPrint(6, "digForward called")
+
+function addBlockInformation(name)
+	
+end
+
+function inspect(inspectFunction)
+	local success, data = inspectFunction()
+	if (not success) then
+		return false
 	end
+	if (blockTable[data.name] == nil) then
+		addBlockInformation(data.name)
+	end
+	return blockTable[data.name] == true
+end
+
+function inspectAround()
+	
+end
+
+function digForward()
 	while (turtle.dig()) do
-		sleep(0.5)
+		sleep(digSleepTime)
 	end
 	turtle.forward()
+end
+
+function digTonelForward()
+	if (debug) then
+		debugPrint(6, "digTonelForward called")
+	end
+	digForward()
 	turtle.digUp()
 	turtle.digDown()
 end
@@ -152,7 +185,7 @@ function makeStep(deep)
 		debugPrint(5, "makeStep called")
 	end
 	for i = 1, deep, 1 do
-		digForward()
+		digTonelForward()
 	end
 	checkSpace()
 end
@@ -183,7 +216,7 @@ end
 
 function digConnector(direction)
 	turnDirection[direction]()
-	digForward()
+	digTonelForward()
 	turnDirection[direction]()
 	turnDirection[direction]()
 	turtle.forward()
