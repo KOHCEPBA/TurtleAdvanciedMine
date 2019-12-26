@@ -24,15 +24,20 @@ tech = "tech"
 
 left = "left"
 right = "right"
-direction = right
+up = "up"
+down = "down"
+forward = "forward"
+back = "back"
+
 otherDirection = {
 	[left] = right,
-	[right] = left
+	[right] = left,
+	[up] = down,
+	[down] = up,
+	[forward] = back,
+	[back] = forward
 }
-
-up = "up"
-forward = "forward"
-down = "down"
+tonelDirection = right
 
 turnDirection = {
 	[right] = turtle.turnRight,
@@ -67,6 +72,18 @@ function inspect(inspectFunction)
 		addBlockInformation(data.name)
 	end
 	return blockTable[data.name] == true
+end
+
+inspectFunctions = {
+	[forward] = turtle.inspect
+	[up] = turtle.inspectUp
+	[down] = turtle.inspectDown
+}
+
+function inspectDiraction(diraction)
+	if (inspect(inspectFunctions[diraction])) then
+		
+	end
 end
 
 function inspectAround()
@@ -160,14 +177,14 @@ end
 
 function moveAndDrop()
 	turtle.back()
-	turnDirection[direction]()
+	turnDirection[tonelDirection]()
 	turtle.dig()
 	turtle.up()
 	turtle.dig()
 	turtle.down()
 	placeChest()
 	dropItems(turtle.drop)
-	turnDirection[otherDirection[direction]]()
+	turnDirection[otherDirection[tonelDirection]]()
 	turtle.forward()
 	if (not hasChests) then
 		error("No more chests")
@@ -246,10 +263,10 @@ function digLevel()
 	if (debug) then
 		debugPrint(4, "digLevel called")
 	end
+	makeArk(tonelDirection)
+	direction = otherDirection[tonelDirection]
 	makeArk(direction)
-	direction = otherDirection[direction]
-	makeArk(direction)
-	direction = otherDirection[direction]
+	direction = otherDirection[tonelDirection]
 end
 
 function mine()
