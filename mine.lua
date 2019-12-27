@@ -15,6 +15,9 @@ hasTorches = true
 chestSlot = 2
 hasChests = true
 
+blockInfoFileName = "blockInfo.txt"
+addBlockInfoFileName = "newBlockInfo.txt"
+
 blockTable = {}
 
 --------------
@@ -44,11 +47,55 @@ turnDirection = {
 	[left] = turtle.turnLeft
 }
 
+separators = {
+	[" "] = "[^%s]+"
+}
+
+toBoolean = {
+    ["true"] = true,
+    ["false"] = false
+}
+
+newBlockInfoFile = nil
 function debugPrint(level, message)
 	if (debug and level <= debugLevel) then
 		print("Debug: ", message)
+
+function string:split(line, pat)
+    local words = {}
+    for token in string.gmatch(line, pat) do
+        table.insert(words, token) 
+    end
+    return words
+end
+
+function prepairBlockInforation(file, sep)
+
+	if (debug) then
+		debugPrint(4, "prepairBlockInforation called with params: "
+			.. "\nfileName = " .. tostring(file)
+			.. "\nsep = " .. sep 
+		)
+	end
+
+	for line in file:lines () do
+
+		debugPrint(1, "[prepairBlockInforation] " .. line)
+
+		r = string:split(line, sep)
+
+		debugPrint(1, "[prepairBlockInforation] " 
+			.. "\nname = " .. r[1] 
+			.. "\nattribute = " .. r[2]
+		)
+		blockTable[r[1]] = toBoolean[r[2]]
+	end
+
+	if (debug) then
+		debugPrint(4, "prepairBlockInforation ended")
 	end
 end
+
 
 
 -- Invite --
@@ -59,8 +106,24 @@ end
 
 -- Program body --
 
+function turnAround()
+		turtle.turnLeft()
+		turtle.turnLeft()
+end
+
+function digDiraction(digFunction, moveFunction)
+	while (digFunction()) do
+		sleep(digSleepTime)
+	end
+	moveFunction()
+end
+
 function addBlockInformation(name)
-	
+	if (newBlockInfoFile == nil) then
+		newBlockInfoFile = io.open(addBlockInfoFileName, "a")
+	end
+	newBlockInfoFile:write(name .. " \n")
+	blockTable[name] = false
 end
 
 function inspect(inspectFunction)
@@ -75,26 +138,55 @@ function inspect(inspectFunction)
 end
 
 inspectFunctions = {
-	[forward] = turtle.inspect
-	[up] = turtle.inspectUp
+	[forward] = turtle.inspect,
+	[up] = turtle.inspectUp,
 	[down] = turtle.inspectDown
+}
+digFunctions = {
+	[forward] = turtle.dig,
+	[back] = function ()
+				turnAround()
+				turtle.dig()
+				turnAround()
+			end,
+	[up] = turtle.digUp,
+	[down] = turtle.digDown
+}
+moveFunctions = {
+	[forward] = turtle.forward,
+	[back] = turtle.back,
+	[up] = turtle.up,
+	[down] = turtle.down
 }
 
 function inspectDiraction(diraction)
+	if (debug) then
+		debugPrint(4, "inspectDiraction called with diraction = " .. diraction)
+	end
 	if (inspect(inspectFunctions[diraction])) then
-		
+		digDiraction(
+			digFunctions[diraction], 
+			moveFunctions[diraction]
+		)
+		inspectAround()
+		digDiraction(
+			digFunctions[otherDirection[diraction]], 
+			moveFunctions[otherDirection[diraction]]
+		)
 	end
 end
 
 function inspectAround()
-	
+	inspectDiraction(up)
+	inspectDiraction(down)
+	for i = 1, 4, 1 do
+		inspectDiraction(forward)
+		turtle.turnRight()
+	end
 end
 
 function digForward()
-	while (turtle.dig()) do
-		sleep(digSleepTime)
-	end
-	turtle.forward()
+	digDiraction(turtle.dig, turtle.forward)
 end
 
 function digTonelForward()
@@ -102,6 +194,7 @@ function digTonelForward()
 		debugPrint(6, "digTonelForward called")
 	end
 	digForward()
+	inspectAround()
 	turtle.digUp()
 	turtle.digDown()
 end
@@ -286,13 +379,24 @@ function prepair()
 
 	slotsInfo[torchSlot] = tech
 	slotsInfo[chestSlot] = tech
+
+
+	file = io.open(blockInfoFileName, "r")
+	prepairBlockInforation(file, separators[" "])
 end
 
 prepair()
 local complete, status = pcall(mine)
+
+--Ending--
 if (complete) then 
 	print("Completed!")
 else
 	print("Completed with errors:")
 	print(status)
+
+--Exit preparations
+if (newBlockInfoFile ~= nil) then
+	newBlockInfoFile:close()
+end
 end

@@ -1,0 +1,5 @@
+minecraft:dirt false
+minecraft:grass false
+minecraft:diamond_ore true
+minecraft:chest false
+minecraft:torch false
