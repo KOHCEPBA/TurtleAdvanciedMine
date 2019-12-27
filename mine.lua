@@ -1,7 +1,11 @@
 -- Static varables --
 --Tech varables
 debug = true
-debugLevel = 0
+logLevel = 4
+logLevels = {"Info", "Debug", "2", "3", "Trace"}
+if (debug) then
+	logFile = io.open("log.txt", "a")
+end
 
 stepDeep = 6
 jumperDeep = 3
@@ -57,9 +61,12 @@ toBoolean = {
 }
 
 newBlockInfoFile = nil
+
 function debugPrint(level, message)
-	if (debug and level <= debugLevel) then
-		print("Debug: ", message)
+	if (debug and level <= logLevel) then
+		logFile:write("[" .. (logLevels[level + 1] or "unknow") .. "]" .. ": " .. message .. "\n")
+	end
+end
 
 function string:split(line, pat)
     local words = {}
@@ -394,9 +401,12 @@ if (complete) then
 else
 	print("Completed with errors:")
 	print(status)
+end
 
 --Exit preparations
 if (newBlockInfoFile ~= nil) then
 	newBlockInfoFile:close()
 end
+if (debug) then
+	logFile:close()
 end
