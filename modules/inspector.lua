@@ -8,6 +8,7 @@ end
 function inspector.setBlockNewInfoFileName(name)
 	addBlockInfoFileName = name or addBlockInfoFileName
 end
+local newBlockInfoFile = nil
 
 local blockTable = {}
 
@@ -31,7 +32,7 @@ end
 local function prepairBlockInforation(file, sep)
 
 	if (debug) then
-		LOGGER.debugPrint(4, "prepairBlockInforation called with params: "
+		LOGGER.debugWrite(4, "prepairBlockInforation called with params: "
 			.. "\nfileName = " .. tostring(file)
 			.. "\nsep = " .. sep 
 		)
@@ -39,11 +40,11 @@ local function prepairBlockInforation(file, sep)
 
 	for line in file:lines () do
 
-		LOGGER.debugPrint(1, "[prepairBlockInforation] " .. line)
+		LOGGER.debugWrite(1, "[prepairBlockInforation] " .. line)
 
 		r = string:split(line, sep)
 
-		LOGGER.debugPrint(1, "[prepairBlockInforation] " 
+		LOGGER.debugWrite(1, "[prepairBlockInforation] " 
 			.. "\nname = " .. r[1] 
 			.. "\nattribute = " .. r[2]
 		)
@@ -51,13 +52,17 @@ local function prepairBlockInforation(file, sep)
 	end
 
 	if (debug) then
-		LOGGER.debugPrint(4, "prepairBlockInforation ended")
+		LOGGER.debugWrite(4, "prepairBlockInforation ended")
 	end
 end
 
 local function addBlockInformation(name)
+	if (debug) then
+		LOGGER.debugWrite(4, "addBlockInformation calles")
+		LOGGER.debugWrite(1, "name = " .. name)
+	end
 	if (newBlockInfoFile == nil) then
-		local newBlockInfoFile = io.open(addBlockInfoFileName, "a")
+		newBlockInfoFile = io.open(addBlockInfoFileName, "a")
 	end
 	newBlockInfoFile:write(name .. " \n")
 	blockTable[name] = false
@@ -98,14 +103,13 @@ local moveFunctions = {
 
 local function inspectDiraction(diraction)
 	if (debug) then
-		LOGGER.debugPrint(4, "inspectDiraction called with diraction = " .. diraction)
+		LOGGER.debugWrite(4, "inspectDiraction called with diraction = " .. diraction)
 	end
 	if (inspect(inspectFunctions[diraction])) then
 		digDiraction(
 			digFunctions[diraction], 
 			moveFunctions[diraction]
 		)
-		inspector.inspectAround()
 		digDiraction(
 			digFunctions[otherDirection[diraction]], 
 			moveFunctions[otherDirection[diraction]]

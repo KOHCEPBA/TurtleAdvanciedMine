@@ -45,14 +45,14 @@ local function moveAndDrop()
 	turtle.back()
 	turnDirection[tonelDirection]()
 	turtle.dig()
-	turtle.up()
-	turtle.dig()
-	turtle.down()
+	turtle.forward()
+	turtle.digUp()
+	turtle.back()
 	chestController.placeChest()
 	dropItems(turtle.drop)
 	turnDirection[otherDirection[tonelDirection]]()
 	turtle.forward()
-	if (not hasChests) then
+	if (not chestController.hasChests) then
 		error("No more chests")
 	end
 end

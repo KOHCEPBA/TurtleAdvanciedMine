@@ -4,11 +4,11 @@ chestController.chestSlot = 2
 chestController.hasChests = true
 
 local function getChestCount()
-	return turtle.getItemCount(torchController.placeTorch())
+	return turtle.getItemCount(chestController.chestSlot)
 end
 
 local function processEmptyChestSlot()
-	LOGGER.debugPrint(0, "Last chest. Stop Chest Installation.")
+	LOGGER.debugWrite(0, "Last chest. Stop Chest Installation.")
 	hasChests = false
 end
 
@@ -17,12 +17,12 @@ function chestController.placeChest()
 		return hasChests
 	end
 	if (debug) then
-		LOGGER.debugPrint(4, "placeChest called")
-		LOGGER.debugPrint(1, "Cests left: " .. getChestCount())
+		LOGGER.debugWrite(4, "placeChest called")
+		LOGGER.debugWrite(1, "Cests left: " .. getChestCount())
 	end
-	turtle.select(torchController.placeTorch())
+	turtle.select(chestController.chestSlot)
 	turtle.place()
-	if (turtle.getItemCount(torchController.placeTorch()) == 0) then
+	if (turtle.getItemCount(chestController.chestSlot) == 0) then
 		processEmptyChestSlot()
 	end
 	return hasChests
@@ -30,7 +30,7 @@ end
 
 function chestController.setChestSlot(slotNumer)
 	-- if (checkNewSlotNumber(slotNumer)) then
-	-- 	torchController.placeTorch() = slotNumer or torchController.placeTorch()
+	-- 	chestController.chestSlot = slotNumer or chestController.chestSlot
 	-- 	return true
 	-- else
 	-- 	return false

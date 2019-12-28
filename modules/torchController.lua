@@ -5,7 +5,7 @@ torchController.hasTorches = true
 
 local function findTorchesInInventory()
 	if (debug) then
-		LOGGER.debugPrint(4, "findTorchesInInventory called")
+		LOGGER.debugWrite(4, "findTorchesInInventory called")
 	end
 	for i = 1, slotsCount, 1 do
 		turtle.select(i)
@@ -18,7 +18,7 @@ local function getTorchCount()
 end
 
 local function processEmptyTorchSlot()
-	LOGGER.debugPrint(0, "Last torch. Stop Torch Installation.")
+	LOGGER.debugWrite(0, "Last torch. Stop Torch Installation.")
 	hasTorches = false
 end
 
@@ -27,8 +27,8 @@ function torchController.placeTorch()
 		return hasTorches
 	end
 	if (debug) then
-		LOGGER.debugPrint(4, "setTorch called")
-		LOGGER.debugPrint(1, "Torches left: " .. getTorchCount())
+		LOGGER.debugWrite(4, "setTorch called")
+		LOGGER.debugWrite(1, "Torches left: " .. getTorchCount())
 	end
 	turtle.select(torchController.torchSlot)
 	turtle.placeDown()

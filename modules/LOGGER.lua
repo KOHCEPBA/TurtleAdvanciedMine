@@ -1,17 +1,18 @@
 LOGGER = {}
-local logLevel = 4
+local logLevel = 2
 local logLevels = {"Info", "Debug", "2", "3", "Trace"}
-if (debug) then
-	local logFile = io.open("resuorces/log.txt", "a")
-end
+local logFile = nil
 
 function LOGGER.setLogLevel(level)
 	logLevel = level or logLevel
 end
 
-function LOGGER.debugPrint(level, message)
+function LOGGER.debugWrite(level, message)
 	level = level or 4
 	if (debug and level <= logLevel) then
+		if (logFile == nil) then
+			logFile = io.open("resuorces/log.txt", "a")
+		end 
 		logFile:write(
 			"[" 
 			.. (logLevels[level + 1] or "unknow") 

@@ -5,30 +5,32 @@ require "modules/directions";
 require "modules/digAndMove";
 require "modules/inspector";
 require "modules/slotInformation";
-debug = false
+debug = true
 
 -- Invite --
 print("Welcome to Digging programm!")
 if (debug) then
-	LOGGER.debugPrint(0, "debug enabled")
+	LOGGER.debugWrite(0, "debug enabled")
 end
 
 -- Program body --
+local startStep
+local endStep
+local startHeight = 2
 
 function main()
-	while startStep < endStep do
-		LOGGER.debugPrint(1, "step = " .. startStep)
-		digAndMove.digLevel()
-		startStep = startStep + 1
-	end
+	digAndMove.mine(startStep, endStep, startHeight)
 end
 
 function init()
 	write("Enter start step (length = step * " .. stepDeep .. "):")
-	startStep = read() + 0
+	startStep = tonumber(read())
 
 	write("Enter end step:")
-	endStep = read() + 0
+	endStep = tonumber(read())
+
+	write("Enter start height:")
+	startHeight = tonumber(read())
 
 	slotInformation.init()
 	inspector.init()
