@@ -5,7 +5,7 @@ require "modules/directions";
 require "modules/digAndMove";
 require "modules/inspector";
 require "modules/slotInformation";
-debug = true
+debug = false
 
 -- Invite --
 print("Welcome to Digging programm!")
@@ -15,7 +15,7 @@ end
 
 -- Program body --
 local startStep
-local endStep
+local endStep = 0
 local startHeight = 2
 
 function main()
@@ -26,8 +26,9 @@ function init()
 	write("Enter start step (length = step * " .. stepDeep .. "):")
 	startStep = tonumber(read())
 
-	write("Enter end step:")
-	endStep = tonumber(read())
+	write("Enter step count:")
+	local count = tonumber(read())
+	endStep = startStep + count
 
 	write("Enter start height:")
 	startHeight = tonumber(read())

@@ -1,6 +1,6 @@
 stepDeep = 6
 jumperDeep = 3
-digSleepTime = 0.5
+digSleepTime = 1
 
 local bottomLevel = 1
 local topLevel = 3
@@ -138,7 +138,6 @@ local function makeStep(deep)
 		digTonelForward()
 	end
 	moveToComfortableHeight()
-	torchController.placeTorch()
 	slotInformation.checkSpace()
 	verticalMove(top, moveDiraction)
 end
@@ -150,6 +149,9 @@ local function makeTonel(step)
 	end
 	for i = 1, step, 1 do
 		makeStep(stepDeep)
+		moveToComfortableHeight()
+		torchController.placeTorch()
+		verticalMove(top, moveDiraction)
 	end
 end
 
@@ -175,6 +177,9 @@ local function makeJumper(direction, deep)
 	end
 	turnDirection[direction]()
 	makeStep(deep)
+	moveToComfortableHeight()
+	torchController.placeTorch()
+	verticalMove(top, moveDiraction)
 	turnDirection[direction]()
 end
 
