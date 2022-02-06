@@ -42,7 +42,7 @@ function configuration.ReadPropertiesFile (file, parameters)
 end
 
 function configuration.WritePropertiesFile(properties, filename)
-    local pf_config = io.open(filename,'w+')
+    local pf_config = io.open(filename,'w')
     if pf_config == nil then error("Error durring processing file " .. filename) end
 
     for k, v in pairs(properties) do

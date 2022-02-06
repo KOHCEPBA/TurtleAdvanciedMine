@@ -2,5 +2,5 @@ require "settingsModule/configuration";
 
 configuration.WriteDefauldProperties(PropertiesPath)
 
-print("Установлены дефолтные настройки")
+print("Set default settings:")
 configuration.Print_Table(configuration.ReadPropertiesFile(PropertiesPath, {}))
