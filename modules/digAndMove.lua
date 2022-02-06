@@ -1,3 +1,6 @@
+require "parameterSet";
+require "settingsModule/configuration";
+
 stepDeep = 6
 jumperDeep = 3
 digSleepTime = 1
@@ -221,5 +224,6 @@ function digAndMove.mine(startStep, endStep, startHeight)
 		LOGGER.debugWrite(1, "step = " .. startStep)
 		digLevel(startStep)
 		startStep = startStep + 1
+		pset.setParameter(PropertiesName.startStep, startStep)
 	end
 end
