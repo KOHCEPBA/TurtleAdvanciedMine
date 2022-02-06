@@ -29,7 +29,7 @@ function string:split(line, pat)
     return words
 end
 
-local function prepairBlockInforation(file, sep)
+local function prepairBlockInformation(file, sep)
 
 	if (debug) then
 		LOGGER.debugWrite(4, "prepairBlockInforation called with params: "
@@ -128,7 +128,7 @@ end
 
 function inspector.init()
 	file = io.open(blockInfoFileName, "r")
-	prepairBlockInforation(file, separators[" "])
+	prepairBlockInformation(file, separators[" "])
 end
 
 function inspector.onStop()
