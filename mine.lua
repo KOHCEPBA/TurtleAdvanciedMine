@@ -5,6 +5,7 @@ require "modules/directions";
 require "modules/digAndMove";
 require "modules/inspector";
 require "modules/slotInformation";
+require "settingsModule/configuration";
 debug = false
 
 -- Invite --
@@ -23,15 +24,14 @@ function main()
 end
 
 function init()
-	write("Enter start step (length = step * " .. stepDeep .. "):")
-	startStep = tonumber(read())
+	local properties = configuration.ReadPropertiesFile(PropertiesPath, {})
+	print("Загруженные настройки:")
+	configuration.Print_Table(properties)
 
-	write("Enter step count:")
-	local count = tonumber(read())
+	startStep = tonumber(properties[PropertiesName.startStep])
+	local count = tonumber(properties[PropertiesName.count])
 	endStep = startStep + count
-
-	write("Enter start height:")
-	startHeight = tonumber(read())
+	startHeight = tonumber(properties[PropertiesName.startHeight])
 
 	slotInformation.init()
 	inspector.init()
