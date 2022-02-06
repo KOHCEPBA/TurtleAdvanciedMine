@@ -24,7 +24,7 @@ function main()
 end
 
 function init()
-	local properties = configuration.ReadPropertiesFile(PropertiesPath, {})
+	properties = configuration.ReadPropertiesFile(PropertiesPath, {})
 	print("Загруженные настройки:")
 	configuration.Print_Table(properties)
 
